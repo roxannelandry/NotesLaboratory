@@ -12,7 +12,7 @@ var baseUrl = "http://localhost:5000";
 
 var boutonAdd = $("#boutonAdd");
 
-var maTache = {"task":"je suis ma premiere tache"}
+var maTache = {"task":"je suis ma premiere tache"};
 
 boutonAdd.click(function(){
     $.ajax({
