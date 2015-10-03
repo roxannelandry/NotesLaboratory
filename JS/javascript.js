@@ -4,13 +4,14 @@
 function createPostIt(id,tache){
     var html = ""
     html += "<div id= '" + id + "'" + ">" + tache + "</div>";
-    $("#listeDesMessages").append(tache);
+    $("#ulList").append(
+            $('<li>').append(html));
 };
 
 
 
 $(document).ready (function(){
-    var i = 1;
+    var i =1;
     var baseUrl = "http://localhost:5000";
 
     var boutonAdd = $("#boutonAdd");
@@ -18,8 +19,11 @@ $(document).ready (function(){
 
     boutonAdd.click(function(){
 
-        var texte = $("#note").val();
-        var tache = {"task":texte};
+
+        if($("#note").val() != ''){
+            var texte = $("#note").val();
+            var tache = {"task":texte};
+        }
 
         $.ajax({
             url: baseUrl + "/tasks/"+i,
@@ -28,13 +32,14 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
-                $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
                 })
             })
-            .fail(function(){
-                alert("Erreur");
+            .fail(function(jqXHR, textStatus){
+                console.log(textStatus);
+                $('#errorBox').show();
+                $('#errorBox')
             });
         i +=1;
     });
@@ -48,24 +53,9 @@ $(document).ready (function(){
             .done(function(data){
                 alert()
             })
-            .fail(function(){
-                alert("caca");
+            .fail(function(jqXHR, textStatus){
+                console.log(textStatus);
+                $('#errorBox').text("Something wrong happened.");
             });
     });
-
-    $("#boutonDelete").click(function(){
-        $.ajax({
-            url: baseUrl + "/tasks"+ j,
-            type: "delete",
-            contentType:"application/json"
-        })
-            .done(function(data){
-                alert()
-            })
-            .fail(function(){
-                alert("caca");
-            });
-    });
-
-    $("listeID")
 });
