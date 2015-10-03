@@ -4,7 +4,7 @@
 function createPostIt(id,tache){
     var html = ""
     html += "<div id= '" + id + "'" + ">" + tache + "</div>";
-    $("#listeDesMessages").append('<option>'+tache+'</option>');
+    $("#listeDesMessages").append(tache);
 };
 
 
