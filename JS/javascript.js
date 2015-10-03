@@ -2,14 +2,15 @@
  * Created by Maxime on 2015-10-01.
  */
 function createPostIt(id,tache){
-    var html = ""
-    html += "<div class='noteDeLaListe' id= '" + id + "'" + ">" + tache + "</div>";
+    var html = "";
+    html += "<div class='noteDeLaListe' id= '" + id + "'" + ">" + "- " + tache + "</div>";
     $("#listeID").append(html);
 };
 
 
+
 $(document).ready (function(){
-    var i = 1;
+    var i =1;
     var baseUrl = "http://localhost:5000";
 
     var boutonAdd = $("#boutonAdd");
@@ -54,8 +55,10 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
+                $('#errorBox').show();
+                $('#errorBox')
             });
-        i +=1;
+        i ++;
     });
 
     $("#boutonModify").click(function(){
@@ -68,18 +71,25 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
-                $("#note").val("");
                 $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
                 })
             })
+            })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
+                $("#errorBox").show("slow").delay(7000).hide("slow");
+                $('#errorMsg').text("Can't modify this task.");
             });
     });
 
-    $("#boutonDelete").click(function(){
+    $("#listeID").on('click', '.noteDeLaListe', function(){
+        $(".noteDeLaListe").css("color","black");
+        $(this).css("color","#2658b7");
+    });
+
+    $("#boutonDelete").click(function () {
         $.ajax({
             url: baseUrl + "/tasks/" + clicked,
             type: "DELETE",
@@ -93,12 +103,8 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $('#errorBox').text("Something wrong happened.");
+                $("#errorBox").show("slow").delay(7000).hide("slow");
+                $('#errorMsg').text("Can't delete this task.");
             });
     })
-
-    $("#listeID").on('click', '.noteDeLaListe', function(){
-        $(".noteDeLaListe").css("background-color","white");
-        $(this).css("background-color","yellow");
-    });
 });
