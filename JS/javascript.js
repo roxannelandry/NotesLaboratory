@@ -4,9 +4,8 @@
 function createPostIt(id,tache){
     var html = ""
     html += "<div id= '" + id + "'" + ">" + tache + "</div>";
-    $("#listeID").append(
-        $('<ul>').append(
-            $('<li>').append(html)));
+    $("#ulList").append(
+            $('<li>').append(html));
 };
 
 
@@ -20,8 +19,11 @@ $(document).ready (function(){
 
     boutonAdd.click(function(){
 
-        var texte = $("#note").val();
-        var tache = {"task":texte};
+
+        if($("#note").val() != ''){
+            var texte = $("#note").val();
+            var tache = {"task":texte};
+        }
 
         $.ajax({
             url: baseUrl + "/tasks/"+i,
@@ -34,8 +36,10 @@ $(document).ready (function(){
                     createPostIt(task.id,task.task);
                 })
             })
-            .fail(function(){
-                alert("cacapost");
+            .fail(function(jqXHR, textStatus){
+                console.log(textStatus);
+                $('#errorBox').show();
+                $('#errorBox')
             });
         i +=1;
     });
@@ -49,8 +53,9 @@ $(document).ready (function(){
             .done(function(data){
                 alert()
             })
-            .fail(function(){
-                alert("caca");
+            .fail(function(jqXHR, textStatus){
+                console.log(textStatus);
+                $('#errorBox').text("Something wrong happened.");
             });
     });
 });
