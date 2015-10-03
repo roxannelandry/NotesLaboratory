@@ -2,15 +2,14 @@
  * Created by Maxime on 2015-10-01.
  */
 function createPostIt(id,tache){
-    var html = "";
-    html += "<div class='noteDeLaListe' id= '" + id + "'" + ">" + "- " + tache + "</div>";
+    var html = ""
+    html += "<div class='noteDeLaListe' id= '" + id + "'" + ">" + tache + "</div>";
     $("#listeID").append(html);
 };
 
 
-
 $(document).ready (function(){
-    var i =1;
+    var i = 1;
     var baseUrl = "http://localhost:5000";
 
     var boutonAdd = $("#boutonAdd");
@@ -19,14 +18,27 @@ $(document).ready (function(){
         window.clicked = this.id;
     });
 
+    var texte = $("#note").val();
+    var tache = {"task":texte};
+    $.ajax({
+        url: baseUrl + "/tasks",
+        type: "get",
+        contentType:"application/json"
+    })
+        .done(function(data){
+            $("#note").val("");
+            $("#listeID").empty();
+            data.tasks.forEach(function(task){
+                createPostIt(task.id,task.task);
+            })
+        })
+        .fail(function(jqXHR, textStatus){
+            console.log(textStatus);
+        });
+    i +=1;
     boutonAdd.click(function(){
-
-
-        if($("#note").val() != ''){
-            var texte = $("#note").val();
-            var tache = {"task":texte};
-        }
-
+        var texte = $("#note").val();
+        var tache = {"task":texte};
         $.ajax({
             url: baseUrl + "/tasks/"+i,
             type: "POST",
@@ -42,10 +54,8 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $('#errorBox').show();
-                $('#errorBox')
             });
-        i ++;
+        i +=1;
     });
 
     $("#boutonModify").click(function(){
@@ -58,25 +68,15 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
+                $("#note").val("");
                 $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
                 })
             })
-            })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $("#errorBox").show("slow").delay(7000).hide("slow");
-                $('#errorMsg').text("Can't modify this task.");
             });
-    });
-
-    $("#listeID").on('click', "div", function () {
-        window.clicked = this.id;
-    });
-
-    $("#listeID").on('click', '.noteDeLaListe', function(){
-        $(this).css("color","#2658b7");
     });
 
     $("#boutonDelete").click(function(){
@@ -93,8 +93,12 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $("#errorBox").show("slow").delay(7000).hide("slow");
-                $('#errorMsg').text("Can't delete this task.");
+                $('#errorBox').text("Something wrong happened.");
             });
     })
+
+    $("#listeID").on('click', '.noteDeLaListe', function(){
+        $(".noteDeLaListe").css("background-color","white");
+        $(this).css("background-color","yellow");
+    });
 });
