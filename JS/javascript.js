@@ -4,9 +4,7 @@
 function createPostIt(id,tache){
     var html = ""
     html += "<div id= '" + id + "'" + ">" + tache + "</div>";
-    $("#listeID").append(
-        $('<ul>').append(
-            $('<li>').append(html)));
+    $("#listeDesMessages").append('<option>'+tache+'</option>');
 };
 
 
@@ -54,4 +52,20 @@ $(document).ready (function(){
                 alert("caca");
             });
     });
+
+    $("#boutonDelete").click(function(){
+        $.ajax({
+            url: baseUrl + "/tasks"+ j,
+            type: "delete",
+            contentType:"application/json"
+        })
+            .done(function(data){
+                alert()
+            })
+            .fail(function(){
+                alert("caca");
+            });
+    });
+
+    $("listeID")
 });
