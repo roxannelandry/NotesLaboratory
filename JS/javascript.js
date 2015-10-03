@@ -8,22 +8,21 @@ function createPostIt(id,tache){
 };
 
 
-
 $(document).ready (function(){
     var i =1;
     var baseUrl = "http://localhost:5000";
 
     var boutonAdd = $("#boutonAdd");
 
+    $("#listeID").on('click', "div", function () {
+        window.clicked = this.id;
+    });
+
+
 
     boutonAdd.click(function(){
-
-
-        if($("#note").val() != ''){
-            var texte = $("#note").val();
-            var tache = {"task":texte};
-        }
-
+        var texte = $("#note").val();
+        var tache = {"task":texte};
         $.ajax({
             url: baseUrl + "/tasks/"+i,
             type: "POST",
@@ -31,6 +30,7 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
+                $("#note").val("");
                 $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
@@ -39,15 +39,18 @@ $(document).ready (function(){
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
                 $('#errorBox').show();
-                $('#errorBox')
+                $('#errorBox');
             });
         i +=1;
     });
 
     $("#boutonModify").click(function(){
+        var texte = $("#note").val();
+        var tache = {"task":texte};
         $.ajax({
-            url: baseUrl + "/tasks",
-            type: "post",
+            url: baseUrl + "/tasks/"+ clicked,
+            type: "put",
+            data: JSON.stringify(tache),
             contentType:"application/json"
         })
             .done(function(data){
@@ -60,10 +63,6 @@ $(document).ready (function(){
                 console.log(textStatus);
                 $('#errorBox').text("Something wrong happened.");
             });
-    });
-
-    $("#listeID").on('click', "div", function () {
-        window.clicked = this.id;
     });
 
     $("#boutonDelete").click(function(){
@@ -83,4 +82,9 @@ $(document).ready (function(){
                 $('#errorBox').text("Something wrong happened.");
             });
     })
+
+    $("#listeID").on('click', '.noteDeLaListe', function(){
+        $(".noteDeLaListe").css("background-color","white");
+        $(this).css("background-color","yellow");
+    });
 });
