@@ -2,33 +2,42 @@
  * Created by Maxime on 2015-10-01.
  */
 function createPostIt(id,tache){
-    var html = "";
-
-
+    var html = ""
+    html += "<div id= '" + id + "'" + ">" + tache + "</div>";
+    $("#listeID").append(html);
 };
-$(document).ready (function(){
 
+
+
+$(document).ready (function(){
+    var i =1;
 var baseUrl = "http://localhost:5000";
 
 var boutonAdd = $("#boutonAdd");
 
-var maTache = {"task":"je suis ma premiere tache"}
+
+
 
 boutonAdd.click(function(){
+
+    var texte = $("#note").val();
+    var tache = {"task":texte};
+
     $.ajax({
-        url: baseUrl + "/tasks/2",
+        url: baseUrl + "/tasks/"+i,
         type: "POST",
-        data: JSON.stringify(maTache),
+        data: JSON.stringify(tache),
         contentType:"application/json"
     })
         .done(function(data){
             data.tasks.forEach(function(task){
-                createPostIt(1,1);
+                createPostIt(task.id,task.task);
             })
         })
         .fail(function(){
             alert("cacapost");
         });
+    i +=1;
 });
 
 $("#boutonModify").click(function(){
