@@ -22,7 +22,12 @@
 }
 
 .noteDeLaListe{
-    border: solid 2px black;
-    border-radius: 5px;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+.noteDeLaListe:hover{
+    cursor: pointer;
+    color: #2658b7;
 }
 

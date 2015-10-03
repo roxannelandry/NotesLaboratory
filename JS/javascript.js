@@ -2,8 +2,8 @@
  * Created by Maxime on 2015-10-01.
  */
 function createPostIt(id,tache){
-    var html = ""
-    html += "<div class='noteDeLaListe' id= '" + id + "'" + ">" + tache + "</div>";
+    var html = "";
+    html += "<div class='noteDeLaListe' id= '" + id + "'" + ">" + "- " + tache + "</div>";
     $("#listeID").append(html);
 };
 
@@ -38,10 +38,11 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $('#errorBox').show();
-                $('#errorBox')
+                $("#errorBox").show("slow").delay(7000).hide("slow");
+                $('#errorMsg').text("Can't add this task.");
             });
-        i +=1;
+        i ++;
+        $("#note").val('');
     });
 
     $("#boutonModify").click(function(){
@@ -54,16 +55,21 @@ $(document).ready (function(){
                 $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
-                })
+            })
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $('#errorBox').text("Something wrong happened.");
+                $("#errorBox").show("slow").delay(7000).hide("slow");
+                $('#errorMsg').text("Can't modify this task.");
             });
     });
 
     $("#listeID").on('click', "div", function () {
         window.clicked = this.id;
+    });
+
+    $("#listeID").on('click', '.noteDeLaListe', function(){
+        $(this).css("color","#2658b7");
     });
 
     $("#boutonDelete").click(function(){
@@ -80,7 +86,8 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $('#errorBox').text("Something wrong happened.");
+                $("#errorBox").show("slow").delay(7000).hide("slow");
+                $('#errorMsg').text("Can't delete this task.");
             });
     })
 });
