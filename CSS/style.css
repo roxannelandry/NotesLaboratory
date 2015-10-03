@@ -1,0 +1,23 @@
+.btn{
+    width:150px;
+}
+
+#penseBete{
+    width:50%;
+    margin:0 auto;
+    padding-top: 15px;
+}
+
+#cadreBouton{
+    text-align: center;
+    padding-bottom:10px;
+}
+
+#listeID{
+    margin-top: 5%;
+}
+
+#errorBox{
+    display: none;
+}
+
