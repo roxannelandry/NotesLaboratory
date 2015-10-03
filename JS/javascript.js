@@ -10,7 +10,7 @@ function createPostIt(id,tache){
 
 
 $(document).ready (function(){
-    var i =1;
+    var i = 1;
     var baseUrl = "http://localhost:5000";
 
     var boutonAdd = $("#boutonAdd");
@@ -28,12 +28,13 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
+                $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
                 })
             })
             .fail(function(){
-                alert("cacapost");
+                alert("Erreur");
             });
         i +=1;
     });
