@@ -9,27 +9,35 @@ function createPostIt(id,tache){
 $(document).ready (function(){
 
 var baseUrl = "http://localhost:5000";
+var i = 1;
 
-var boutonAdd = $("#boutonAdd");
 
-var maTache = {"task":"je suis ma premiere tache"};
+$("#boutonAdd").click(function(){
+var text = $('textarea#note').val();
+    if(text != ""){
+        var maTache = {"task": text};
+    }
 
-boutonAdd.click(function(){
-    $.ajax({
-        url: baseUrl + "/tasks/2",
-        type: "POST",
-        data: JSON.stringify(maTache),
-        contentType:"application/json"
-    })
-        .done(function(data){
-            data.tasks.forEach(function(task){
-                createPostIt(1,1);
-            })
+
+$.ajax({
+    url: baseUrl + "/tasks/" + i,
+    type: "POST",
+    data: JSON.stringify(maTache),
+    contentType:"application/json"
+})
+    .done(function(data){
+        data.tasks.forEach(function(task){
+            createPostIt("#listeID",1);
         })
-        .fail(function(){
-            alert("cacapost");
-        });
+    })
+    .fail(function(){
+        alert();
+        $('#errorBox').style.display = 'block';
+    });
+    $('textarea#note').val('');
 });
+    i++;
+
 
 $("#boutonModify").click(function(){
     $.ajax({
