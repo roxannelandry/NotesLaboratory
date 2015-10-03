@@ -4,8 +4,9 @@
 function createPostIt(id,tache){
     var html = ""
     html += "<div id= '" + id + "'" + ">" + tache + "</div>";
-    $("#ulList").append(
-            $('<li>').append(html));
+    $("#listeID").append(
+        $('<ul>').append(
+            $('<li>').append(html)));
 };
 
 
@@ -38,11 +39,13 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $('#errorBox').show();
-                $('#errorBox')
+                $("#errorBox").show("slow").delay(7000).hide("slow");
+                $('#errorMsg').text("Impossible d'ajouter la nouvelle task.");
             });
-        i +=1;
+        i ++;
+        $("#note").val('');
     });
+
 
     $("#boutonModify").click(function(){
         $.ajax({
@@ -51,11 +54,12 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
-                alert()
+
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $('#errorBox').text("Something wrong happened.");
+                $("#errorBox").show("slow").delay(7000).hide("slow");
+                $('#errorMsg').text("Impossible de modifier cette task.");
             });
     });
 });
