@@ -3,10 +3,8 @@
  */
 function createPostIt(id,tache){
     var html = ""
-    html += "<div id= '" + id + "'" + ">" + tache + "</div>";
-    $("#listeID").append(
-        $('<ul>').append(
-            $('<li>').append(html)));
+    html += "<div class='noteDeLaListe' id= '" + id + "'" + ">" + tache + "</div>";
+    $("#listeID").append(html);
 };
 
 
@@ -33,19 +31,18 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
+                $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
                 })
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $("#errorBox").show("slow").delay(7000).hide("slow");
-                $('#errorMsg').text("Impossible d'ajouter la nouvelle task.");
+                $('#errorBox').show();
+                $('#errorBox')
             });
-        i ++;
-        $("#note").val('');
+        i +=1;
     });
-
 
     $("#boutonModify").click(function(){
         $.ajax({
@@ -54,12 +51,36 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
-
+                $("#listeID").empty();
+                data.tasks.forEach(function(task){
+                    createPostIt(task.id,task.task);
+                })
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $("#errorBox").show("slow").delay(7000).hide("slow");
-                $('#errorMsg').text("Impossible de modifier cette task.");
+                $('#errorBox').text("Something wrong happened.");
             });
     });
+
+    $("#listeID").on('click', "div", function () {
+        window.clicked = this.id;
+    });
+
+    $("#boutonDelete").click(function(){
+        $.ajax({
+            url: baseUrl + "/tasks/" + clicked,
+            type: "DELETE",
+            contentType:"application/json"
+        })
+            .done(function(data){
+                $("#listeID").empty();
+                data.tasks.forEach(function(task){
+                    createPostIt(task.id,task.task);
+                })
+            })
+            .fail(function(jqXHR, textStatus){
+                console.log(textStatus);
+                $('#errorBox').text("Something wrong happened.");
+            });
+    })
 });
