@@ -15,6 +15,9 @@ $(document).ready (function(){
 
     var boutonAdd = $("#boutonAdd");
 
+    $("#listeID").on('click', "div", function () {
+        window.clicked = this.id;
+    });
 
     boutonAdd.click(function(){
 
@@ -31,6 +34,7 @@ $(document).ready (function(){
             contentType:"application/json"
         })
             .done(function(data){
+                $("#note").val("");
                 $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
@@ -38,23 +42,26 @@ $(document).ready (function(){
             })
             .fail(function(jqXHR, textStatus){
                 console.log(textStatus);
-                $("#errorBox").show("slow").delay(7000).hide("slow");
-                $('#errorMsg').text("Can't add this task.");
+                $('#errorBox').show();
+                $('#errorBox')
             });
         i ++;
-        $("#note").val('');
     });
 
     $("#boutonModify").click(function(){
+        var texte = $("#note").val();
+        var tache = {"task":texte};
         $.ajax({
-            url: baseUrl + "/tasks",
-            type: "post",
+            url: baseUrl + "/tasks/"+ clicked,
+            type: "put",
+            data: JSON.stringify(tache),
             contentType:"application/json"
         })
             .done(function(data){
                 $("#listeID").empty();
                 data.tasks.forEach(function(task){
                     createPostIt(task.id,task.task);
+                })
             })
             })
             .fail(function(jqXHR, textStatus){
